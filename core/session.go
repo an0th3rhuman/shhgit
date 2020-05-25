@@ -53,6 +53,7 @@ func (s *Session) InitLogger() {
 
 func (s *Session) InitSignatures() {
 	s.Signatures = GetSignatures(s)
+	s.Config.DomainsRegex = CompileDomainRegex(s)
 }
 
 func (s *Session) InitGitHubClients() {

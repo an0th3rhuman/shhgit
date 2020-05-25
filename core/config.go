@@ -2,9 +2,11 @@ package core
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
+	"regexp"
 	"strings"
 
 	"gopkg.in/yaml.v3"
@@ -17,6 +19,8 @@ type Config struct {
 	BlacklistedPaths             []string          `yaml:"blacklisted_paths"`
 	BlacklistedEntropyExtensions []string          `yaml:"blacklisted_entropy_extensions"`
 	Signatures                   []ConfigSignature `yaml:"signatures"`
+	Domains                      []string
+	DomainsRegex                 regexp.Regexp
 }
 
 type ConfigSignature struct {
@@ -48,7 +52,10 @@ func ParseConfig() (*Config, error) {
 	if len(config.SlackWebhook) > 0 {
 		config.SlackWebhook = os.ExpandEnv(config.SlackWebhook)
 	}
-
+	config, err = ParseDomains(config)
+	if err != nil {
+		return config, err
+	}
 	return config, nil
 }
 
@@ -66,4 +73,20 @@ func (c *Config) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 
 	return nil
+}
+
+func ParseDomains(configData *Config) (*Config, error) {
+	dir, _ := os.Getwd()
+	bytedata, err := ioutil.ReadFile(path.Join(dir, "domains.txt"))
+	if err != nil {
+		return configData, err
+	}
+	fileData := string(bytedata)
+	domainNames := strings.Split(fileData, "\r\n")
+	fmt.Println(domainNames)
+	for i := 0; i < len(domainNames); i++ {
+		configData.Domains = append(configData.Domains, domainNames[i])
+	}
+	return configData, nil
+
 }
