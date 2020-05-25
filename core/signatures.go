@@ -60,9 +60,6 @@ func (s SimpleSignature) Match(file MatchFile) (bool, string) {
 		}
 		return (s.match == *haystack), matchPart
 
-	} else {
-		fmt.Println(session.Config.DomainsRegex)
-		fmt.Print("Domain simple sig regexp match failed")
 	}
 	return false, matchPart
 
@@ -100,9 +97,6 @@ func (s PatternSignature) Match(file MatchFile) (bool, string) {
 		}
 		return s.match.MatchString(*haystack), matchPart
 
-	} else {
-		fmt.Println(session.Config.DomainsRegex)
-		fmt.Print("Domain pattern sig regexp match failed")
 	}
 	return false, matchPart
 }
