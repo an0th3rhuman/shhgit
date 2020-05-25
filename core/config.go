@@ -2,7 +2,6 @@ package core
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -83,7 +82,6 @@ func ParseDomains(configData *Config) (*Config, error) {
 	}
 	fileData := string(bytedata)
 	domainNames := strings.Split(fileData, "\r\n")
-	fmt.Println(domainNames)
 	for i := 0; i < len(domainNames); i++ {
 		configData.Domains = append(configData.Domains, domainNames[i])
 	}

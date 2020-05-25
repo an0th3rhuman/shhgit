@@ -39,12 +39,12 @@ type PatternSignature struct {
 }
 
 func (s SimpleSignature) Match(file MatchFile) (bool, string) {
-	fmt.Println(session.Config.DomainsRegex)
 	var (
 		haystack  *string
 		matchPart = ""
 	)
 	if session.Config.DomainsRegex.Match(file.Contents) {
+		fmt.Println("Match found")
 		switch s.part {
 		case PartPath:
 			haystack = &file.Path
@@ -79,7 +79,7 @@ func (s PatternSignature) Match(file MatchFile) (bool, string) {
 		matchPart = ""
 	)
 	if session.Config.DomainsRegex.Match(file.Contents) {
-
+		fmt.Println("Match found")
 		switch s.part {
 		case PartPath:
 			haystack = &file.Path
