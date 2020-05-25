@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"os"
 	"regexp"
 	"strings"
@@ -22,7 +23,7 @@ func ProcessRepositories() {
 			for {
 				repositoryId := <-session.Repositories
 				repo, err := core.GetRepository(session, repositoryId)
-
+				fmt.Println("Received repository ID ", repositoryId, repo.GetCloneURL())
 				if err != nil {
 					session.Log.Warn("Failed to retrieve repository %d: %s", repositoryId, err)
 					continue
@@ -31,7 +32,7 @@ func ProcessRepositories() {
 				if repo.GetPermissions()["pull"] &&
 					uint(repo.GetStargazersCount()) >= *session.Options.MinimumStars &&
 					uint(repo.GetSize()) < *session.Options.MaximumRepositorySize {
-
+					fmt.Println("cloning repository ", repo.GetCloneURL())
 					processRepositoryOrGist(repo.GetCloneURL())
 				}
 			}
